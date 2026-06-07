@@ -5,7 +5,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<meta
 			name="description"
-			content="SaaSify traffic-source analytics demo with Amplitude event tracking, UTM capture, CTA click tracking, and conversion intent measurement."
+			content="SaaSify traffic-source analytics demo with Amplitude event tracking, UTM capture, CTA click tracking, conversion intent measurement, and a one-click Amplitude dashboard shortcut."
 		/>
 		<title>SaaSify - Traffic Source Analytics Demo</title>
 
@@ -186,6 +186,34 @@
 				color: var(--text-dark);
 			}
 
+			.metric-card small {
+				display: block;
+				margin-top: 0.6rem;
+				font-size: 0.82rem;
+				font-weight: 700;
+				color: var(--primary-dark);
+			}
+
+			.metric-dashboard-button {
+				appearance: none;
+				width: 100%;
+				cursor: pointer;
+				transition:
+					transform 0.2s ease,
+					border-color 0.2s ease,
+					box-shadow 0.2s ease,
+					background-color 0.2s ease;
+			}
+
+			.metric-dashboard-button:hover,
+			.metric-dashboard-button:focus-visible {
+				background-color: #eff6ff;
+				border-color: var(--primary);
+				transform: translateY(-2px);
+				box-shadow: 0 18px 38px -24px rgba(37, 99, 235, 0.9);
+				outline: none;
+			}
+
 			#traffic-log {
 				margin: 3rem auto 0;
 				padding: 1.1rem;
@@ -287,14 +315,22 @@
 				</div>
 
 				<div class="metrics-grid" aria-label="Analytics value proposition">
-					<div class="metric-card">
-						<span>Track</span>
-						<strong>UTM source, medium, campaign, referrer, and landing page</strong>
-					</div>
+					<button
+						type="button"
+						class="metric-card metric-dashboard-button"
+						data-dashboard-link="https://app.amplitude.com/analytics/floral-cloud-071880/setup"
+						aria-label="Open the Amplitude analytics dashboard in a new tab"
+					>
+						<span>Open Dashboard</span>
+						<strong>One-click access to Amplitude analytics for the demo</strong>
+						<small>Reduces clicks during interview presentation →</small>
+					</button>
+
 					<div class="metric-card">
 						<span>Measure</span>
 						<strong>CTA engagement and conversion intent by channel</strong>
 					</div>
+
 					<div class="metric-card">
 						<span>Analyze</span>
 						<strong>Funnel path from page view to high-intent action</strong>
@@ -313,16 +349,19 @@
 
 		<footer>
 			Built as a data analyst assignment demo: campaign tracking, event design,
-			and business performance measurement.
+			business performance measurement, and low-friction dashboard access.
 		</footer>
 
 		<script src="https://cdn.amplitude.com/script/b9b3d5cd55e51589157ea0603dd158c4.js"></script>
 
 		<script>
 			const AMPLITUDE_API_KEY = "b9b3d5cd55e51589157ea0603dd158c4";
+			const AMPLITUDE_DASHBOARD_URL =
+				"https://app.amplitude.com/analytics/floral-cloud-071880/setup";
 			const logOutput = document.getElementById("log-output");
 			const sdkStatus = document.getElementById("sdk-status");
 			const ctaButtons = document.querySelectorAll("[data-cta-name]");
+			const dashboardButtons = document.querySelectorAll("[data-dashboard-link]");
 
 			function isAmplitudeAvailable() {
 				return (
@@ -448,6 +487,21 @@
 				});
 			}
 
+			function openAmplitudeDashboard(button) {
+				const trafficSource = getTrafficSource();
+				const dashboardUrl = button.dataset.dashboardLink || AMPLITUDE_DASHBOARD_URL;
+
+				sendAnalyticsEvent("Amplitude Dashboard Opened", {
+					...trafficSource,
+					dashboard_destination: "amplitude_setup_and_analytics",
+					link_url: dashboardUrl,
+					ux_principle: "reduced_click_path",
+					funnel_step: "04_dashboard_review",
+				});
+
+				window.open(dashboardUrl, "_blank", "noopener,noreferrer");
+			}
+
 			document.addEventListener("DOMContentLoaded", () => {
 				initializeAmplitude();
 				trackLandingPageView();
@@ -455,6 +509,12 @@
 				ctaButtons.forEach((button) => {
 					button.addEventListener("click", () => {
 						trackCtaClick(button);
+					});
+				});
+
+				dashboardButtons.forEach((button) => {
+					button.addEventListener("click", () => {
+						openAmplitudeDashboard(button);
 					});
 				});
 			});
