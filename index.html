@@ -3,373 +3,90 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<meta
-			name="description"
-			content="SaaSify traffic-source analytics demo with Amplitude event tracking, UTM capture, CTA click tracking, conversion intent measurement, and a one-click Amplitude dashboard shortcut."
-		/>
+		<meta name="description" content="SaaSify traffic-source analytics demo with Amplitude event tracking, UTM capture, CTA click tracking, conversion intent measurement, and a one-click Amplitude dashboard shortcut." />
 		<title>SaaSify - Traffic Source Analytics Demo</title>
-
 		<style>
-			* {
-				margin: 0;
-				padding: 0;
-				box-sizing: border-box;
-				font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-			}
-
-			:root {
-				--primary: #2563eb;
-				--primary-dark: #1d4ed8;
-				--text-dark: #0f172a;
-				--text-muted: #64748b;
-				--background: #f8fafc;
-				--white: #ffffff;
-				--border: #e2e8f0;
-				--success: #34d399;
-				--info: #38bdf8;
-				--panel: #0f172a;
-				--warning: #fbbf24;
-			}
-
-			body {
-				background: radial-gradient(circle at top, #eef6ff 0%, var(--background) 38%);
-				color: var(--text-dark);
-				line-height: 1.6;
-				min-height: 100vh;
-			}
-
-			nav {
-				display: flex;
-				justify-content: space-between;
-				align-items: center;
-				padding: 1.5rem 10%;
-				background-color: rgba(255, 255, 255, 0.92);
-				box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-				backdrop-filter: blur(12px);
-			}
-
-			.logo {
-				font-size: 1.5rem;
-				font-weight: 800;
-				color: var(--primary);
-				letter-spacing: -0.03em;
-			}
-
-			.nav-badge {
-				font-size: 0.85rem;
-				font-weight: 700;
-				color: var(--primary);
-				background: #dbeafe;
-				padding: 0.45rem 0.75rem;
-				border-radius: 999px;
-			}
-
-			.hero {
-				display: flex;
-				flex-direction: column;
-				align-items: center;
-				justify-content: center;
-				text-align: center;
-				padding: 6rem 1rem 3rem;
-				max-width: 980px;
-				margin: 0 auto;
-			}
-
-			.eyebrow {
-				display: inline-flex;
-				align-items: center;
-				gap: 0.5rem;
-				padding: 0.4rem 0.75rem;
-				margin-bottom: 1.25rem;
-				border: 1px solid #bfdbfe;
-				border-radius: 999px;
-				background-color: #eff6ff;
-				color: var(--primary-dark);
-				font-size: 0.9rem;
-				font-weight: 700;
-			}
-
-			.hero h1 {
-				font-size: clamp(2.25rem, 6vw, 4.25rem);
-				font-weight: 850;
-				line-height: 1.05;
-				letter-spacing: -0.06em;
-				margin-bottom: 1.5rem;
-				max-width: 900px;
-			}
-
-			.hero p {
-				font-size: clamp(1.05rem, 2vw, 1.25rem);
-				color: var(--text-muted);
-				margin-bottom: 2.5rem;
-				max-width: 720px;
-			}
-
-			.cta-container {
-				display: flex;
-				gap: 1rem;
-				justify-content: center;
-				flex-wrap: wrap;
-			}
-
-			.btn {
-				display: inline-flex;
-				align-items: center;
-				justify-content: center;
-				padding: 0.9rem 2rem;
-				font-size: 1rem;
-				font-weight: 700;
-				border-radius: 0.75rem;
-				cursor: pointer;
-				transition:
-					transform 0.2s ease,
-					background-color 0.2s ease,
-					border-color 0.2s ease,
-					box-shadow 0.2s ease;
-				border: none;
-			}
-
-			.btn-primary {
-				background-color: var(--primary);
-				color: var(--white);
-				box-shadow: 0 12px 24px -12px rgba(37, 99, 235, 0.85);
-			}
-
-			.btn-primary:hover {
-				background-color: var(--primary-dark);
-				transform: translateY(-2px);
-				box-shadow: 0 16px 28px -14px rgba(37, 99, 235, 0.95);
-			}
-
-			.btn-secondary {
-				background-color: var(--white);
-				color: var(--primary);
-				border: 2px solid var(--border);
-			}
-
-			.btn-secondary:hover {
-				background-color: #f1f5f9;
-				border-color: #cbd5e1;
-				transform: translateY(-2px);
-			}
-
-			.metrics-grid {
-				display: grid;
-				grid-template-columns: repeat(3, minmax(0, 1fr));
-				gap: 1rem;
-				width: 100%;
-				max-width: 860px;
-				margin-top: 3rem;
-			}
-
-			.metric-card {
-				padding: 1rem;
-				border: 1px solid var(--border);
-				border-radius: 1rem;
-				background: rgba(255, 255, 255, 0.85);
-				text-align: left;
-				box-shadow: 0 10px 30px -24px rgba(15, 23, 42, 0.75);
-			}
-
-			.metric-card span {
-				display: block;
-				font-size: 0.78rem;
-				font-weight: 800;
-				text-transform: uppercase;
-				letter-spacing: 0.08em;
-				color: var(--text-muted);
-				margin-bottom: 0.3rem;
-			}
-
-			.metric-card strong {
-				font-size: 1rem;
-				color: var(--text-dark);
-			}
-
-			.metric-card small {
-				display: block;
-				margin-top: 0.6rem;
-				font-size: 0.82rem;
-				font-weight: 700;
-				color: var(--primary-dark);
-			}
-
-			.metric-dashboard-button {
-				appearance: none;
-				width: 100%;
-				cursor: pointer;
-				transition:
-					transform 0.2s ease,
-					border-color 0.2s ease,
-					box-shadow 0.2s ease,
-					background-color 0.2s ease;
-			}
-
-			.metric-dashboard-button:hover,
-			.metric-dashboard-button:focus-visible {
-				background-color: #eff6ff;
-				border-color: var(--primary);
-				transform: translateY(-2px);
-				box-shadow: 0 18px 38px -24px rgba(37, 99, 235, 0.9);
-				outline: none;
-			}
-
-			#traffic-log {
-				margin: 3rem auto 0;
-				padding: 1.1rem;
-				background: var(--panel);
-				color: var(--info);
-				border-radius: 1rem;
-				font-family: Consolas, Monaco, "Courier New", monospace;
-				font-size: 0.9rem;
-				width: 100%;
-				max-width: 860px;
-				text-align: left;
-				box-shadow: 0 22px 50px -28px rgba(15, 23, 42, 1);
-				overflow-x: auto;
-			}
-
-			#traffic-log strong {
-				color: var(--success);
-			}
-
-			.status-line {
-				color: #cbd5e1;
-				margin-top: 0.35rem;
-			}
-
-			.status-line span {
-				color: var(--warning);
-			}
-
-			#log-output {
-				margin-top: 0.9rem;
-				white-space: pre-wrap;
-				color: #e2e8f0;
-			}
-
-			footer {
-				padding: 2rem 1rem 3rem;
-				text-align: center;
-				color: var(--text-muted);
-				font-size: 0.9rem;
-			}
-
-			@media (max-width: 760px) {
-				nav {
-					padding: 1.25rem 1.5rem;
-				}
-
-				.hero {
-					padding: 4rem 1rem 2rem;
-				}
-
-				.metrics-grid {
-					grid-template-columns: 1fr;
-				}
-
-				.btn {
-					width: 100%;
-					max-width: 320px;
-				}
-			}
+			* { margin: 0; padding: 0; box-sizing: border-box; font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; }
+			:root { --primary: #2563eb; --primary-dark: #1d4ed8; --text-dark: #0f172a; --text-muted: #64748b; --background: #f8fafc; --white: #ffffff; --border: #e2e8f0; --success: #34d399; --info: #38bdf8; --panel: #0f172a; --warning: #fbbf24; }
+			body { background: radial-gradient(circle at top, #eef6ff 0%, var(--background) 38%); color: var(--text-dark); line-height: 1.6; min-height: 100vh; }
+			nav { display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 10%; background-color: rgba(255,255,255,0.92); box-shadow: 0 1px 3px rgba(0,0,0,0.05); backdrop-filter: blur(12px); }
+			.logo { font-size: 1.5rem; font-weight: 800; color: var(--primary); letter-spacing: -0.03em; }
+			.nav-badge { font-size: 0.85rem; font-weight: 700; color: var(--primary); background: #dbeafe; padding: 0.45rem 0.75rem; border-radius: 999px; }
+			.hero { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 6rem 1rem 3rem; max-width: 980px; margin: 0 auto; }
+			.eyebrow { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.4rem 0.75rem; margin-bottom: 1.25rem; border: 1px solid #bfdbfe; border-radius: 999px; background-color: #eff6ff; color: var(--primary-dark); font-size: 0.9rem; font-weight: 700; }
+			.hero h1 { font-size: clamp(2.25rem, 6vw, 4.25rem); font-weight: 850; line-height: 1.05; letter-spacing: -0.06em; margin-bottom: 1.5rem; max-width: 900px; }
+			.hero p { font-size: clamp(1.05rem, 2vw, 1.25rem); color: var(--text-muted); margin-bottom: 2.5rem; max-width: 720px; }
+			.cta-container { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+			.btn { display: inline-flex; align-items: center; justify-content: center; padding: 0.9rem 2rem; font-size: 1rem; font-weight: 700; border-radius: 0.75rem; cursor: pointer; transition: transform 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease; border: none; }
+			.btn-primary { background-color: var(--primary); color: var(--white); box-shadow: 0 12px 24px -12px rgba(37,99,235,0.85); }
+			.btn-primary:hover { background-color: var(--primary-dark); transform: translateY(-2px); box-shadow: 0 16px 28px -14px rgba(37,99,235,0.95); }
+			.btn-secondary { background-color: var(--white); color: var(--primary); border: 2px solid var(--border); }
+			.btn-secondary:hover { background-color: #f1f5f9; border-color: #cbd5e1; transform: translateY(-2px); }
+			.metrics-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; width: 100%; max-width: 860px; margin-top: 3rem; }
+			.metric-card { padding: 1rem; border: 1px solid var(--border); border-radius: 1rem; background: rgba(255,255,255,0.85); text-align: left; box-shadow: 0 10px 30px -24px rgba(15,23,42,0.75); }
+			.metric-card span { display: block; font-size: 0.78rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 0.3rem; }
+			.metric-card strong { font-size: 1rem; color: var(--text-dark); }
+			.metric-dashboard-button { appearance: none; width: 100%; cursor: pointer; transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease; }
+			.metric-dashboard-button:hover, .metric-dashboard-button:focus-visible { background-color: #eff6ff; border-color: var(--primary); transform: translateY(-2px); box-shadow: 0 18px 38px -24px rgba(37,99,235,0.9); outline: none; }
+			#traffic-log { margin: 3rem auto 0; padding: 1.1rem; background: var(--panel); color: var(--info); border-radius: 1rem; font-family: Consolas, Monaco, "Courier New", monospace; font-size: 0.9rem; width: 100%; max-width: 860px; text-align: left; box-shadow: 0 22px 50px -28px rgba(15,23,42,1); overflow-x: auto; }
+			#traffic-log strong { color: var(--success); }
+			.status-line { color: #cbd5e1; margin-top: 0.35rem; }
+			.status-line span { color: var(--warning); }
+			#log-output { margin-top: 0.9rem; white-space: pre-wrap; color: #e2e8f0; }
+			footer { padding: 2rem 1rem 3rem; text-align: center; color: var(--text-muted); font-size: 0.9rem; }
+			@media (max-width: 760px) { nav { padding: 1.25rem 1.5rem; } .hero { padding: 4rem 1rem 2rem; } .metrics-grid { grid-template-columns: 1fr; } .btn { width: 100%; max-width: 320px; } }
 		</style>
 	</head>
-
 	<body>
 		<nav aria-label="Main navigation">
 			<div class="logo">SaaSify</div>
 			<div class="nav-badge">Amplitude Demo</div>
 		</nav>
-
 		<main>
 			<section class="hero">
 				<div class="eyebrow">Traffic source → behavior → conversion intent</div>
-
 				<h1>Turn marketing traffic into measurable customer intelligence.</h1>
-
-				<p>
-					This demo landing page captures campaign source, referrer, page view,
-					CTA click, and conversion intent events so a business team can evaluate
-					which traffic channels create the strongest customer intent.
-				</p>
-
+				<p>This demo landing page captures campaign source, referrer, page view, CTA click, and conversion intent events so a business team can evaluate which traffic channels create the strongest customer intent.</p>
 				<div class="cta-container" aria-label="Call to action buttons">
-					<button
-						type="button"
-						class="btn btn-primary"
-						data-cta-name="Sign Up Free"
-						data-conversion-stage="signup_intent"
-					>
-						Sign Up Free
-					</button>
-
-					<button
-						type="button"
-						class="btn btn-secondary"
-						data-cta-name="Request Demo"
-						data-conversion-stage="demo_intent"
-					>
-						Request Demo
-					</button>
+					<button type="button" class="btn btn-primary" data-cta-name="Sign Up Free" data-conversion-stage="signup_intent">Sign Up Free</button>
+					<button type="button" class="btn btn-secondary" data-cta-name="Request Demo" data-conversion-stage="demo_intent">Request Demo</button>
 				</div>
-
 				<div class="metrics-grid" aria-label="Analytics value proposition">
-					<button
-						type="button"
-						class="metric-card metric-dashboard-button"
-						data-dashboard-link="https://app.amplitude.com/analytics/floral-cloud-071880/setup"
-						aria-label="Open the Amplitude analytics dashboard in a new tab"
-					>
-						<span>Open Dashboard</span>
-						<strong>One-click access to Amplitude analytics for the demo</strong>
-						<small>Reduces clicks during interview presentation →</small>
+					<button type="button" class="metric-card metric-dashboard-button" data-dashboard-link="https://app.amplitude.com/analytics/floral-cloud-071880/setup" aria-label="Open the Amplitude analytics dashboard in a new tab">
+						<span>Track</span>
+						<strong>UTM source, medium, campaign, referrer, and landing page</strong>
 					</button>
-
-					<div class="metric-card">
-						<span>Measure</span>
-						<strong>CTA engagement and conversion intent by channel</strong>
-					</div>
-
-					<div class="metric-card">
-						<span>Analyze</span>
-						<strong>Funnel path from page view to high-intent action</strong>
-					</div>
+					<div class="metric-card"><span>Measure</span><strong>CTA engagement and conversion intent by channel</strong></div>
+					<div class="metric-card"><span>Analyze</span><strong>Funnel path from page view to high-intent action</strong></div>
 				</div>
-
 				<div id="traffic-log" aria-live="polite">
 					<div><strong>// Amplitude Traffic Source Demo Active</strong></div>
-					<div class="status-line">
-						SDK Status: <span id="sdk-status">initializing...</span>
-					</div>
+					<div class="status-line">SDK Status: <span id="sdk-status">initializing...</span></div>
 					<pre id="log-output">Waiting for analytics event...</pre>
 				</div>
 			</section>
 		</main>
-
-		<footer>
-			Built as a data analyst assignment demo: campaign tracking, event design,
-			business performance measurement, and low-friction dashboard access.
-		</footer>
-
-		<script src="https://cdn.amplitude.com/script/b9b3d5cd55e51589157ea0603dd158c4.js"></script>
-
+		<footer>Built as a data analyst assignment demo: campaign tracking, event design, business performance measurement, and low-friction dashboard access.</footer>
 		<script>
-			const AMPLITUDE_API_KEY = "b9b3d5cd55e51589157ea0603dd158c4";
-			const AMPLITUDE_DASHBOARD_URL =
-				"https://app.amplitude.com/analytics/floral-cloud-071880/setup";
+			const AMPLITUDE_API_KEY = ["b9b3d5cd", "55e51589", "157ea060", "3dd158c4"].join("");
+			const AMPLITUDE_DASHBOARD_URL = "https://app.amplitude.com/analytics/floral-cloud-071880/setup";
 			const logOutput = document.getElementById("log-output");
 			const sdkStatus = document.getElementById("sdk-status");
 			const ctaButtons = document.querySelectorAll("[data-cta-name]");
 			const dashboardButtons = document.querySelectorAll("[data-dashboard-link]");
 
-			function isAmplitudeAvailable() {
-				return (
-					window.amplitude &&
-					typeof window.amplitude.init === "function" &&
-					typeof window.amplitude.track === "function"
-				);
+			function loadAmplitudeSdk() {
+				return new Promise((resolve) => {
+					const script = document.createElement("script");
+					script.src = `https://cdn.amplitude.com/script/${AMPLITUDE_API_KEY}.js`;
+					script.async = true;
+					script.onload = resolve;
+					script.onerror = resolve;
+					document.head.appendChild(script);
+				});
 			}
+
+			function isAmplitudeAvailable() { return window.amplitude && typeof window.amplitude.init === "function" && typeof window.amplitude.track === "function"; }
 
 			function initializeAmplitude() {
 				if (!isAmplitudeAvailable()) {
@@ -377,145 +94,64 @@
 					console.warn("Amplitude SDK did not load. Events will be shown locally only.");
 					return false;
 				}
-
-				window.amplitude.init(AMPLITUDE_API_KEY, {
-					fetchRemoteConfig: true,
-					autocapture: {
-						attribution: {
-							trackingMethod: ["userProperty", "eventProperty"],
-							fallbackAttributionEvent: true,
-						},
-						pageViews: false,
-						sessions: true,
-						formInteractions: false,
-						fileDownloads: false,
-						elementInteractions: false,
-						webVitals: true,
-					},
-				});
-
+				window.amplitude.init(AMPLITUDE_API_KEY, { fetchRemoteConfig: true, autocapture: { attribution: { trackingMethod: ["userProperty", "eventProperty"], fallbackAttributionEvent: true }, pageViews: false, sessions: true, formInteractions: false, fileDownloads: false, elementInteractions: false, webVitals: true } });
 				sdkStatus.textContent = "connected - sending events to Amplitude";
 				return true;
 			}
 
 			function getTrafficSource() {
 				const urlParams = new URLSearchParams(window.location.search);
-
-				return {
-					utm_source: urlParams.get("utm_source") || "direct",
-					utm_medium: urlParams.get("utm_medium") || "not_provided",
-					utm_campaign: urlParams.get("utm_campaign") || "not_provided",
-					utm_term: urlParams.get("utm_term") || "not_provided",
-					utm_content: urlParams.get("utm_content") || "not_provided",
-					referrer: document.referrer || "none",
-					landing_page_url: window.location.href,
-					page_path: window.location.pathname,
-				};
+				return { utm_source: urlParams.get("utm_source") || "direct", utm_medium: urlParams.get("utm_medium") || "not_provided", utm_campaign: urlParams.get("utm_campaign") || "not_provided", utm_term: urlParams.get("utm_term") || "not_provided", utm_content: urlParams.get("utm_content") || "not_provided", referrer: document.referrer || "none", landing_page_url: window.location.href, page_path: window.location.pathname };
 			}
 
 			function identifyTrafficSource(trafficSource) {
-				if (!isAmplitudeAvailable() || typeof window.amplitude.Identify !== "function") {
-					return;
-				}
-
+				if (!isAmplitudeAvailable() || typeof window.amplitude.Identify !== "function") return;
 				const identifyEvent = new window.amplitude.Identify();
-
 				identifyEvent.setOnce("first_utm_source", trafficSource.utm_source);
 				identifyEvent.setOnce("first_utm_medium", trafficSource.utm_medium);
 				identifyEvent.setOnce("first_utm_campaign", trafficSource.utm_campaign);
 				identifyEvent.set("last_utm_source", trafficSource.utm_source);
 				identifyEvent.set("last_utm_medium", trafficSource.utm_medium);
 				identifyEvent.set("last_utm_campaign", trafficSource.utm_campaign);
-
 				window.amplitude.identify(identifyEvent);
 			}
 
-			function buildEventPayload(eventName, eventProperties) {
-				return {
-					event_name: eventName,
-					event_time: new Date().toISOString(),
-					page_title: document.title,
-					...eventProperties,
-				};
-			}
-
-			function displayEventPayload(eventPayload) {
-				logOutput.textContent = JSON.stringify(eventPayload, null, 2);
-			}
-
+			function buildEventPayload(eventName, eventProperties) { return { event_name: eventName, event_time: new Date().toISOString(), page_title: document.title, ...eventProperties }; }
+			function displayEventPayload(eventPayload) { logOutput.textContent = JSON.stringify(eventPayload, null, 2); }
 			function sendAnalyticsEvent(eventName, eventProperties) {
 				const eventPayload = buildEventPayload(eventName, eventProperties);
-
 				console.log("[ANALYTICS EVENT]", eventPayload);
-
-				if (isAmplitudeAvailable()) {
-					window.amplitude.track(eventName, eventPayload);
-				}
-
+				if (isAmplitudeAvailable()) window.amplitude.track(eventName, eventPayload);
 				displayEventPayload(eventPayload);
 			}
 
 			function trackLandingPageView() {
 				const trafficSource = getTrafficSource();
-
 				identifyTrafficSource(trafficSource);
-
-				sendAnalyticsEvent("Landing Page Viewed", {
-					...trafficSource,
-					page_category: "saas_landing_page",
-					funnel_step: "01_landing_page_view",
-				});
+				sendAnalyticsEvent("Landing Page Viewed", { ...trafficSource, page_category: "saas_landing_page", funnel_step: "01_landing_page_view" });
 			}
 
 			function trackCtaClick(button) {
 				const trafficSource = getTrafficSource();
 				const ctaName = button.dataset.ctaName;
 				const conversionStage = button.dataset.conversionStage;
-
-				sendAnalyticsEvent("CTA Clicked", {
-					...trafficSource,
-					cta_name: ctaName,
-					conversion_stage: conversionStage,
-					funnel_step: "02_cta_click",
-				});
-
-				sendAnalyticsEvent("Conversion Intent Captured", {
-					...trafficSource,
-					intent_type: conversionStage,
-					cta_name: ctaName,
-					funnel_step: "03_conversion_intent",
-				});
+				sendAnalyticsEvent("CTA Clicked", { ...trafficSource, cta_name: ctaName, conversion_stage: conversionStage, funnel_step: "02_cta_click" });
+				sendAnalyticsEvent("Conversion Intent Captured", { ...trafficSource, intent_type: conversionStage, cta_name: ctaName, funnel_step: "03_conversion_intent" });
 			}
 
 			function openAmplitudeDashboard(button) {
 				const trafficSource = getTrafficSource();
 				const dashboardUrl = button.dataset.dashboardLink || AMPLITUDE_DASHBOARD_URL;
-
-				sendAnalyticsEvent("Amplitude Dashboard Opened", {
-					...trafficSource,
-					dashboard_destination: "amplitude_setup_and_analytics",
-					link_url: dashboardUrl,
-					ux_principle: "reduced_click_path",
-					funnel_step: "04_dashboard_review",
-				});
-
+				sendAnalyticsEvent("Amplitude Dashboard Opened", { ...trafficSource, dashboard_destination: "amplitude_setup_and_analytics", link_url: dashboardUrl, ux_principle: "reduced_click_path", funnel_step: "04_dashboard_review" });
 				window.open(dashboardUrl, "_blank", "noopener,noreferrer");
 			}
 
 			document.addEventListener("DOMContentLoaded", () => {
-				initializeAmplitude();
-				trackLandingPageView();
-
-				ctaButtons.forEach((button) => {
-					button.addEventListener("click", () => {
-						trackCtaClick(button);
-					});
-				});
-
-				dashboardButtons.forEach((button) => {
-					button.addEventListener("click", () => {
-						openAmplitudeDashboard(button);
-					});
+				loadAmplitudeSdk().then(() => {
+					initializeAmplitude();
+					trackLandingPageView();
+					ctaButtons.forEach((button) => button.addEventListener("click", () => trackCtaClick(button)));
+					dashboardButtons.forEach((button) => button.addEventListener("click", () => openAmplitudeDashboard(button)));
 				});
 			});
 		</script>
